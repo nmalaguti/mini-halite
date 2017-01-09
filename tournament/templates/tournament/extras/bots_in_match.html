@@ -1,0 +1,7 @@
+{% for r in results %}
+    <a href="{% url 'tournament:bot' r.bot.id %}">
+        {% if bot and bot.id == r.bot.id %}<u>{% endif %}{{ r.bot.name }}{% if bot and bot.id == r.bot.id %}</u>{% endif %}
+        ({{ r.last_frame_alive }})
+    </a>
+    {% if not forloop.last %},{% endif %}
+{% endfor %}

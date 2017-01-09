@@ -1,0 +1,45 @@
+{% extends "tournament/base.html" %}
+{% load tournament_extras %}
+
+{% block title %}{{ bot.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p>{{ bot.name }} - mu: {{ bot.mu|floatformat:3 }}, sigma: {{ bot.sigma|floatformat:3 }}</p>
+                {% if match_list %}
+                    <table class="table">
+                        <tr>
+                            <th>Time</th>
+                            <th>Opponents</th>
+                            <th>Result</th>
+                            <th>Dimensions</th>
+                            <th>mu</th>
+                            <th>sigma</th>
+                            <th>View</th>
+                        </tr>
+                        {% for match_result in match_list %}
+                            <tr>
+                                <td>{{ match_result.match.date|date:"d/m/Y" }} {{ match_result.match.date|time:"h:i:s A" }}</td>
+                                <td>{% order_bots_by_results match_result.match bot %}</td>
+                                <td>{{ match_result.rank }} of {{ match_result.match.results.all|length }}</td>
+                                <td>{{ match_result.match.width }}x{{ match_result.match.height }}</td>
+                                <td>{{ match_result.mu|floatformat:3 }}</td>
+                                <td>{{ match_result.sigma|floatformat:3 }}</td>
+                                <td>
+                                    <a href="{%  url 'tournament:match' match_result.match.id %}">
+                                        <span class="glyphicon glyphicon-film"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <h2>No match results are available.</h2>
+                {% endif %}
+            </div>
+        </div>
+        {% page_links match_list %}
+    </div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "tournament/base.html" %}
+{% load tournament_extras %}
+
+{% block title %}{{ match.seed }}{% endblock %}
+
+{% block content %}
+<div id="container" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Time</th>
+                    <th>Opponents</th>
+                    <th>Dimensions</th>
+                    <th>Seed</th>
+                </tr>
+                <tr>
+                    <td>{{ match.date|date:"d/m/Y" }} {{ match.date|time:"h:i:s A" }}</td>
+                    <td>{% order_bots_by_results match %}</td>
+                    <td>{{ match.width }}x{{ match.height }}</td>
+                    <td>{{ match.seed }}</td>
+                </tr>
+            </table>
+            <div id="pageContent" class="pageContent text-center"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .glyphicon-refresh-animate {
+        -animation: spin .7s infinite linear;
+        -webkit-animation: spin2 .7s infinite linear;
+    }
+    @-webkit-keyframes spin2 {
+        from { -webkit-transform: rotate(0deg);}
+        to { -webkit-transform: rotate(360deg);}
+    }
+    @keyframes spin {
+        from { transform: scale(1) rotate(0deg);}
+        to { transform: scale(1) rotate(360deg);}
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.2.2/pixi.min.js"></script>
+<script src="https://halite.io/lib/xss.js"></script>
+<script src="https://halite.io/script/parsereplay.js"></script>
+<script src="https://halite.io/script/visualizer.js"></script>
+<script type="text/javascript">
+    function textFromAnyURL(url) {
+        $("#pageContent").html("<h1><span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span> Loading replay...</h1>");
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", url, true);
+        oReq.onload = function (oEvent) {
+            if (oReq.status != 404) {
+                $("#pageContent").html("<h1><span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span> Preparing replay...</h1>");
+                showGame(textToGame(oReq.response, url), $("#pageContent"), null, null, true, false, true);
+            } else {
+                $("#pageContent").html("<h1>Gamefile not found</h1><p>The gamefile at \""+url+"\" could not be found.</h1>");
+            }
+        }
+        oReq.send(null);
+    }
+
+
+    textFromAnyURL("{{ match.replay.url }}");
+</script>
+{% endblock %}

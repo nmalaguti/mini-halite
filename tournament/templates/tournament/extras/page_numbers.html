@@ -1,0 +1,5 @@
+{% for page_number in page_numbers %}
+    <li{% if page_number == page.number %} class="active"{% endif %}>
+        <a href="?page={{ page_number }}">{{ page_number }}</a>
+    </li>
+{% endfor %}

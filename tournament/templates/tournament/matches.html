@@ -1,0 +1,40 @@
+{% extends "tournament/base.html" %}
+{% load tournament_extras %}
+
+{% block title %}Halite Private Tournament - Matches{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if match_list %}
+                    <table class="table">
+                        <tr>
+                            <th>Time</th>
+                            <th>Opponents</th>
+                            <th>Dimensions</th>
+                            <th>View</th>
+                        </tr>
+                        {% for match in match_list %}
+                            <tr>
+                                <td>{{ match.date|date:"d/m/Y" }} {{ match.date|time:"h:i:s A" }}</td>
+                                <td>{% order_bots_by_results match %}</td>
+                                <td>{{ match.width }}x{{ match.height }}</td>
+                                <td>
+                                    <a href="{%  url 'tournament:match' match.id %}">
+                                        <span class="glyphicon glyphicon-film"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <h2>No matches are available.</h2>
+                {% endif %}
+            </div>
+        </div>
+        {% if is_paginated %}
+            {% page_links page_obj %}
+        {% endif %}
+    </div>
+{% endblock %}
