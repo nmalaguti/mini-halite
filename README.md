@@ -17,7 +17,7 @@ Mini Halite is a Django application that will run local [Halite](http://halite.i
 7. run the server: `python manage.py runserver`
 8. add some bots (see below)
 9. run the worker: `python manage.py runworker`
-10. visit http://127.0.0.1/lite/tournament/ and watch your bots compete
+10. visit http://127.0.0.1:8000/lite/tournament/ and watch your bots compete
 
 ### Settings
 
@@ -32,7 +32,7 @@ Mini Halite is a Django application that will run local [Halite](http://halite.i
 1. create a directory in the `bots/` directory (e.g. `firstbot`)
 2. copy all the files into the directory needed to run your bot
 3. make a `run.sh` or `run.cmd` file that will execute your bot (so that all bots can be launched the same way with a single command)
-4. login to the admin site http://127.0.0.1/lite/admin/ and add your bot. You should just need to specify the bot's name (make sure it matches the directory name)
+4. login to the admin site http://127.0.0.1:8000/lite/admin/ and add your bot. You should just need to specify the bot's name (make sure it matches the directory name)
 5. your new bot will automatically start competing. To disable it, go to it on the admin site and uncheck the Enabled box and save.
 
 ## How does it work?
