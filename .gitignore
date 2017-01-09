@@ -3,6 +3,7 @@
 db.sqlite3
 /bots/*
 !/bots/.gitkeep
+/halite
 
 # Created by https://www.gitignore.io/api/python
 
