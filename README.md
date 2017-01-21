@@ -4,7 +4,7 @@ Mini Halite is a Django application that will run local [Halite](http://halite.i
 
 ## Requirements
 
- - Python 3.5 or higher
+ - Python 2.7+ or 3.5+
 
 ## Installation
 

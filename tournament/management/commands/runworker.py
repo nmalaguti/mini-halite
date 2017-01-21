@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import gzip
 from collections import namedtuple
 from glob import glob
@@ -7,7 +9,7 @@ from os import path
 from os import remove
 from random import sample, choice, random
 from shutil import copyfileobj
-from subprocess import run, PIPE
+from subprocess import check_output
 
 from django.conf import settings
 from django.core.files import File
@@ -15,7 +17,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from ...models import Bot, Match, MatchResult
+from tournament.models import Bot, Match, MatchResult
 
 from trueskill import Rating, rate
 
@@ -53,15 +55,15 @@ class Command(BaseCommand):
         commands = chain.from_iterable(
             ((path.join(settings.BOT_DIR, bot.name, settings.BOT_EXEC), bot.name) for bot in bots)
         )
-        run_command = [settings.HALITE_EXEC, '-q', '-d', '%s %s' % (dimension, dimension), '-o', *commands]
+        run_command = [settings.HALITE_EXEC, '-q', '-d', '%s %s' % (dimension, dimension), '-o'] + list(commands)
 
         self.stdout.write(str(timezone.now()) + ' ' + ' '.join(run_command))
-        completed_process = run(run_command, stdout=PIPE, universal_newlines=True, cwd=settings.BASE_DIR)
+        output = check_output(run_command, universal_newlines=True, cwd=settings.BASE_DIR)
 
         for log in glob('*.log*'):
             remove(log)
 
-        return self._parse_output(completed_process.stdout, len(bots))
+        return self._parse_output(output, len(bots))
 
     @staticmethod
     def _select_bots():
@@ -72,7 +74,8 @@ class Command(BaseCommand):
                            key=itemgetter(0)
                        )]
 
-        [seed, *rest] = sorted_bots
+        seed = sorted_bots[0]
+        rest = sorted_bots[1:]
         closest = [pair[1] for pair in
                    sorted(
                        [(random() * abs(seed.mu - bot.mu), bot) for bot in rest],
