@@ -21,7 +21,7 @@
                         </tr>
                         {% for match_result in match_list %}
                             <tr>
-                                <td>{{ match_result.match.date|date:"d/m/Y" }} {{ match_result.match.date|time:"h:i:s A" }}</td>
+                                <td>{{ match_result.match.date|date:"m/d/Y" }} {{ match_result.match.date|time:"h:i:s A" }}</td>
                                 <td>{% order_bots_by_results match_result.match bot %}</td>
                                 <td>{{ match_result.rank }} of {{ match_result.match.results.all|length }}</td>
                                 <td>{{ match_result.match.width }}x{{ match_result.match.height }}</td>
