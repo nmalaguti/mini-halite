@@ -125,10 +125,10 @@ MEDIA_URL = '/lite/media/'
 
 BOT_DIR = os.path.join(BASE_DIR, 'bots')
 
-BOT_EXEC = 'run.sh'
+BOT_EXEC = '{}/run.sh'
 
 HALITE_EXEC = os.path.join(BASE_DIR, 'halite')
 
 PAGE_SIZE = 10
 
-TIME_ZONE = 'America/New_York'  # 'UTC'
+TIME_ZONE = 'America/New_York'

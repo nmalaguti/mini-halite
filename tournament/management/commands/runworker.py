@@ -66,7 +66,7 @@ class Command(BaseCommand):
         dimension = choice(MAP_SIZES)
 
         commands = chain.from_iterable(
-            ((path.join(settings.BOT_DIR, bot.name, settings.BOT_EXEC), bot.name) for bot in bots)
+            ((settings.BOT_EXEC.format(path.join(settings.BOT_DIR, bot.name)), bot.name) for bot in bots)
         )
         run_command = [settings.HALITE_EXEC, '-q', '-d', '%s %s' % (dimension, dimension), '-o'] + list(commands)
 
