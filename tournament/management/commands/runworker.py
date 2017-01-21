@@ -39,10 +39,16 @@ class Command(BaseCommand):
             self._run_match()
 
     @staticmethod
-    def _parse_output(result, num_bots):
+    def _parse_output(result, num_bots, dimension):
         lines = result.splitlines()
 
-        [width, height] = [int(x) for x in lines.pop(0).split()]
+        # older versions of the halite exe don't output the dimensions
+        try:
+            [width, height] = [int(x) for x in lines[0].split()]
+            lines.pop(0)
+        except ValueError:
+            width = height = dimension
+
         [hlt_file, seed] = lines.pop(0).split()
         results = [Result(*(int(part) - 1 for part in parts))
                    for parts in (line.split() for line in lines[:num_bots])]
@@ -67,7 +73,7 @@ class Command(BaseCommand):
         self.stdout.write(str(timezone.now()) + ' ' + ' '.join(run_command))
         output = check_output(run_command, universal_newlines=True, cwd=settings.BASE_DIR)
 
-        return self._parse_output(output, len(bots))
+        return self._parse_output(output, len(bots), dimension)
 
     @staticmethod
     def _select_bots():
