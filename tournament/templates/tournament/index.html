@@ -13,6 +13,7 @@
                         <th>Sigma</th>
                         <th>Score</th>
                         <th>Games</th>
+                        <th>Enabled</th>
                     </tr>
                     {% for bot in bot_list %}
                         <tr>
@@ -21,6 +22,7 @@
                             <td>{{ bot.sigma|floatformat:3 }}</td>
                             <td>{{ bot.score|floatformat:3 }}</td>
                             <td>{{ bot.matches.count }}</td>
+                            <td>{% if bot.enabled %}Yes{% else %}No{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </table>
