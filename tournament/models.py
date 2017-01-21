@@ -37,6 +37,7 @@ class MatchResult(models.Model):
     mu = models.FloatField()
     sigma = models.FloatField()
     last_frame_alive = models.IntegerField()
+    error_log = models.FileField(upload_to='error_logs', default=None)
 
     def __str__(self):
         return "{0} - {1}: {2}".format(self.match, self.bot.name, self.rank)

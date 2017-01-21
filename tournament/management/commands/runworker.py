@@ -28,7 +28,7 @@ SEED_NUM_PLAYERS = [2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6]
 NON_SEED_NUM_PLAYERS = [2] * 5 + [3] * 8 + [4] * 9 + [5] * 8 + [6] * 5
 
 Result = namedtuple('Result', 'player_id rank last_frame_alive')
-Output = namedtuple('Output', 'width height hlt_file seed results')
+Output = namedtuple('Output', 'width height hlt_file seed results timeout_bots timeout_logs')
 
 
 class Command(BaseCommand):
@@ -46,8 +46,15 @@ class Command(BaseCommand):
         [hlt_file, seed] = lines.pop(0).split()
         results = [Result(*(int(part) - 1 for part in parts))
                    for parts in (line.split() for line in lines[:num_bots])]
+        lines = lines[num_bots:]
+        timeout_bots = []
+        timeout_logs = []
+        if lines:
+            # timeouts
+            timeout_bots = [int(player_id) - 1 for player_id in lines.pop(0).split()]
+            timeout_logs = [line.strip() for line in lines]
 
-        return Output(width, height, hlt_file, seed, results)
+        return Output(width, height, hlt_file, seed, results, timeout_bots, timeout_logs)
 
     def _run_halite(self, bots):
         dimension = choice(MAP_SIZES)
@@ -59,9 +66,6 @@ class Command(BaseCommand):
 
         self.stdout.write(str(timezone.now()) + ' ' + ' '.join(run_command))
         output = check_output(run_command, universal_newlines=True, cwd=settings.BASE_DIR)
-
-        for log in glob('*.log*'):
-            remove(log)
 
         return self._parse_output(output, len(bots))
 
@@ -111,13 +115,36 @@ class Command(BaseCommand):
             remove(compressed_replay_filename)
 
             for i, bot in enumerate(bots):
-                match_result = MatchResult(bot=bot,
-                                           rank=output.results[i].rank + 1,
-                                           match=match,
-                                           mu=bot.mu,
-                                           sigma=bot.sigma,
-                                           last_frame_alive=output.results[i].last_frame_alive)
-                match_result.save()
+                error_log = None
+                if output.results[i].player_id in output.timeout_bots:
+                    # timeout
+                    index = output.timeout_bots.index(output.results[i].player_id)
+                    error_log = output.timeout_logs[index]
+
+                error_file = None
+                error_file_wrapped = None
+                try:
+                    if error_log:
+                        error_file = open(error_log, 'rb')
+                        error_file_wrapped = File(error_file)
+
+                    match_result = MatchResult(bot=bot,
+                                               rank=output.results[i].rank + 1,
+                                               match=match,
+                                               mu=bot.mu,
+                                               sigma=bot.sigma,
+                                               last_frame_alive=output.results[i].last_frame_alive,
+                                               error_log=error_file_wrapped)
+                    match_result.save()
+                finally:
+                    if error_file:
+                        error_file.close()
+
+                if error_log:
+                    remove(error_log)
+
+            for log in glob('*.log*'):
+                remove(log)
 
     @staticmethod
     def _compress_hlt(output):

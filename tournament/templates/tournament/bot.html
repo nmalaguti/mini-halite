@@ -18,6 +18,7 @@
                             <th>mu</th>
                             <th>sigma</th>
                             <th>View</th>
+                            <th>Errors</th>
                         </tr>
                         {% for match_result in match_list %}
                             <tr>
@@ -31,6 +32,15 @@
                                     <a href="{%  url 'tournament:match' match_result.match.id %}">
                                         <span class="glyphicon glyphicon-film"></span>
                                     </a>
+                                </td>
+                                <td>
+                                    {% if match_result.error_log %}
+                                        <a href="{{ match_result.error_log.url }}">
+                                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                        </a>
+                                    {% else %}
+                                        &mdash;
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
