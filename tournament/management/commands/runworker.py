@@ -58,7 +58,7 @@ class Command(BaseCommand):
         if lines:
             # timeouts
             timeout_bots = [int(player_id) - 1 for player_id in lines.pop(0).split()]
-            timeout_logs = [line.strip() for line in lines]
+            timeout_logs = lines.pop(0).strip().split()
 
         return Output(width, height, hlt_file, seed, results, timeout_bots, timeout_logs)
 
