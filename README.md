@@ -1,6 +1,6 @@
 # Mini Halite
 
-Mini Halite is a Django application that will run local [Halite](http://halite.io/) tournaments for your bots.
+Mini Halite is a Django application that will run local [Halite](http://2016.halite.io/) tournaments for your bots.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ Mini Halite is a Django application that will run local [Halite](http://halite.i
 2. install dependencies: `pip install -rrequirements.txt`
 3. create database: `python manage.py migrate`
 4. create an admin account: `python manage.py createsuperuser`
-5. install `halite` executable from https://halite.io/downloads.php
+5. install `halite` executable from http://2016.halite.io/downloads.php
 6. configure settings in `lite/settings.py` (see below for details)
 7. run the server: `python manage.py runserver`
 8. add some bots (see below)

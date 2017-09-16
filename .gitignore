@@ -4,6 +4,7 @@ db.sqlite3
 /bots/*
 !/bots/.gitkeep
 /halite
+!tournament/static/tournament/lib/
 
 # Created by https://www.gitignore.io/api/python
 

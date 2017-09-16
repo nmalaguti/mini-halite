@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +9,8 @@
     <title>{% block title %}{% endblock %}</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://halite.io/lib/bootstrap.min.css" rel="stylesheet">
-    <link href="https://halite.io/style/general.css" rel="stylesheet">
+    <link href="{% static "tournament/lib/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "tournament/style/general.css" %}" rel="stylesheet">
     {% block styles %}{% endblock %}
 
     <!--[if lt IE 9]>
