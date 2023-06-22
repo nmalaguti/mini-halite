@@ -4,7 +4,6 @@ db.sqlite3
 /bots/*
 !/bots/.gitkeep
 /halite
-!tournament/static/tournament/lib/
 
 # Created by https://www.gitignore.io/api/python
 
@@ -157,3 +156,5 @@ fabric.properties
 # *.ipr
 
 # End of https://www.gitignore.io/api/intellij
+
+!tournament/static/tournament/lib/
