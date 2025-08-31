@@ -1,9 +1,7 @@
 *.hlt
 *.hlt.gz
+*.hlt.br
 db.sqlite3
-/bots/*
-!/bots/.gitkeep
-/halite
 
 # Created by https://www.gitignore.io/api/python
 
@@ -79,9 +77,6 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-
-# pyenv
-.python-version
 
 # celery beat schedule file
 celerybeat-schedule

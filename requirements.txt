@@ -1,2 +1,0 @@
-django==1.10.5
-trueskill==0.4.4

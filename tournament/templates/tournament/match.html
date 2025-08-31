@@ -50,23 +50,34 @@
 <script src="{%  static "tournament/lib/xss.js" %}"></script>
 <script src="{%  static "tournament/script/parsereplay.js" %}"></script>
 <script src="{%  static "tournament/script/visualizer.js" %}"></script>
-<script type="text/javascript">
-    function textFromAnyURL(url) {
+<script type="module">
+    import initBrotli, { decompress as brotliDecompress } from "https://unpkg.com/brotli-wasm@3.0.1/pkg.web/brotli_wasm.js";
+    await initBrotli();
+    async function textFromAnyURL(url) {
         $("#pageContent").html("<h1><span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span> Loading replay...</h1>");
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", url, true);
-        oReq.onload = function (oEvent) {
-            if (oReq.status != 404) {
-                $("#pageContent").html("<h1><span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span> Preparing replay...</h1>");
-                showGame(textToGame(oReq.response, url), $("#pageContent"), null, null, true, false, true);
-            } else {
-                $("#pageContent").html("<h1>Gamefile not found</h1><p>The gamefile at \""+url+"\" could not be found.</h1>");
+
+        try {
+            const resp = await fetch(url);
+
+            if (!resp.ok) {
+                $("#pageContent").html(`<h1>Gamefile not found</h1><p>The gamefile at "${url}" could not be found.</p>`);
+                return;
             }
+
+            $("#pageContent").html("<h1><span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span> Preparing replay...</h1>");
+
+            const uint8 = new Uint8Array(await resp.arrayBuffer());
+            const brotliDecoded = brotliDecompress(uint8);
+            const text = new TextDecoder().decode(brotliDecoded);
+            showGame(textToGame(text, url), $("#pageContent"), null, null, true, false, true);
+
+        } catch (err) {
+            console.error(err);
+            $("#pageContent").html(`<h1>Error loading gamefile</h1><p>${err}</p>`);
         }
-        oReq.send(null);
     }
 
-
+    // usage
     textFromAnyURL("{{ match.replay.url }}");
 </script>
 {% endblock %}

@@ -3,21 +3,23 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('tournament/extras/bots_in_match.html')
+@register.inclusion_tag("tournament/extras/bots_in_match.html")
 def order_bots_by_results(match, bot=None):
-    results = match.results.order_by('rank').all()
+    results = match.results.order_by("rank").all()
     return {
-        'results': results,
-        'bot': bot,
+        "results": results,
+        "bot": bot,
     }
 
-@register.inclusion_tag('tournament/extras/page_links.html')
+
+@register.inclusion_tag("tournament/extras/page_links.html")
 def page_links(page):
     return {
-        'page': page,
+        "page": page,
     }
 
-@register.inclusion_tag('tournament/extras/page_numbers.html')
+
+@register.inclusion_tag("tournament/extras/page_numbers.html")
 def nearby_pages(page):
     neighbors = 5
     if page.number < (neighbors + 1):
@@ -31,6 +33,8 @@ def nearby_pages(page):
         max_page = page.number + neighbors
 
     return {
-        'page_numbers': range(max(1, min_page), min(max_page, page.paginator.num_pages) + 1),
-        'page': page,
+        "page_numbers": range(
+            max(1, min_page), min(max_page, page.paginator.num_pages) + 1
+        ),
+        "page": page,
     }

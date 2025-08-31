@@ -1,0 +1,22 @@
+[project]
+name = "mini-halite"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "brotli>=1.1.0",
+    "decorator>=5.2.1",
+    "django>=5.2.5",
+    "docker>=7.1.0",
+    "numba>=0.61.2",
+    "numpy>=2.2.6",
+    "pydantic>=2.11.7",
+    "structlog>=25.4.0",
+    "trueskill>=0.4.5",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.11",
+]
